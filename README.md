@@ -9,6 +9,7 @@ To see the current version being targeted, check the branch name!
 To use yarn-deobfuscated Minecraft for Minecraft modding or as a dependency in a Java project, you can use [loom](https://github.com/fabricmc/fabric-loom) Gradle plugin. See [fabric wiki tutorial](https://fabricmc.net/wiki/tutorial:setup) for more information.
 
 To obtain a deobfuscated Minecraft jar, [`./gradlew mapNamedJar`](#mapNamedJar) will generate a jar named like `<minecraft version>-named.jar`, which can be sent to a decompiler for deobfuscated code.
+To obtain a deobfuscated Minecraft server jar, [`./gradlew mapNamedServerJar`](#mapNamedServerJar) will generate a jar named like `<minecraft version>-server-named.jar`.
 
 ## Contributing
 
@@ -39,6 +40,9 @@ Build a GZip'd archive containing a tiny mapping between official (obfuscated), 
 
 ### `mapNamedJar`
 Builds a deobfuscated jar with yarn mappings and automapped fields (enums, etc.). Unmapped names will be filled with [intermediary](https://github.com/FabricMC/Intermediary) names.
+
+### `mapNamedServerJar`
+Builds a deobfuscated server jar with yarn mappings and automapped fields (enums, etc.). Unmapped names will be filled with [intermediary](https://github.com/FabricMC/Intermediary) names.
 
 ### `decompileCFR`
 Decompile the mapped source code. **Note:** This is not designed to be recompiled.
