@@ -71,7 +71,11 @@ def cacheFilesMinecraft = file(".gradle/minecraft")
 def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
 def intermediaryJar = file("${minecraft_version}-intermediary.jar")
+def intermediaryClientJar = file("${minecraft_version}-client-intermediary.jar")
+def intermediaryServerJar = file("${minecraft_version}-server-intermediary.jar")
 def namedJar = file("${minecraft_version}-named.jar")
+def namedClientJar = file("${minecraft_version}-client-named.jar")
+def namedServerJar = file("${minecraft_version}-server-named.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
 def serverJar = new File(cacheFilesMinecraft, "${minecraft_version}-server.jar")
@@ -358,6 +362,21 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	}
 }
 
+task mapIntermediaryServerJar(dependsOn: [downloadMcLibs, downloadIntermediary]) {
+	group = mapJarGroup
+	inputs.files downloadMcLibs.outputs.files.files
+	outputs.file(intermediaryServerJar)
+
+	//Force the task to always run
+	outputs.upToDateWhen { false }
+
+	doLast {
+		logger.lifecycle(":mapping minecraft server to intermediary")
+		def tinyInput = downloadIntermediary.dest
+		mapJar(intermediaryServerJar, serverJar, tinyInput, libraries, "official", "intermediary")
+	}
+}
+
 task setupYarn(dependsOn: mapIntermediaryJar) {
 	group = yarnGroup
 }
@@ -579,6 +598,21 @@ task mapNamedJar(dependsOn: ["mergeV2", mapIntermediaryJar]) {
 		logger.lifecycle(":mapping minecraft to named")
 
 		mapJar(namedJar, intermediaryJar, mergeV2.output, libraries, "intermediary", "named")
+	}
+}
+
+task mapNamedServerJar(dependsOn: ["mergeV2", mapIntermediaryServerJar]) {
+	group = mapJarGroup
+	inputs.files downloadMcLibs.outputs.files.files
+	outputs.file(namedServerJar)
+
+	//Force the task to always run
+	outputs.upToDateWhen { false }
+
+	doLast {
+		logger.lifecycle(":mapping minecraft server to named")
+
+		mapJar(namedServerJar, intermediaryServerJar, mergeV2.output, libraries, "intermediary", "named")
 	}
 }
 
